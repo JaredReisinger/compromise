@@ -1,4 +1,4 @@
-/* compromise 13.3.2 MIT */
+/* compromise 13.3.2-patched MIT */
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -68,19 +68,6 @@ function _setPrototypeOf(o, p) {
   return _setPrototypeOf(o, p);
 }
 
-function _isNativeReflectConstruct() {
-  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-  if (Reflect.construct.sham) return false;
-  if (typeof Proxy === "function") return true;
-
-  try {
-    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -97,27 +84,8 @@ function _possibleConstructorReturn(self, call) {
   return _assertThisInitialized(self);
 }
 
-function _createSuper(Derived) {
-  var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-  return function _createSuperInternal() {
-    var Super = _getPrototypeOf(Derived),
-        result;
-
-    if (hasNativeReflectConstruct) {
-      var NewTarget = _getPrototypeOf(this).constructor;
-
-      result = Reflect.construct(Super, arguments, NewTarget);
-    } else {
-      result = Super.apply(this, arguments);
-    }
-
-    return _possibleConstructorReturn(this, result);
-  };
-}
-
 function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
 }
 
 function _arrayWithHoles(arr) {
@@ -125,7 +93,10 @@ function _arrayWithHoles(arr) {
 }
 
 function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
+    return;
+  }
+
   var _arr = [];
   var _n = true;
   var _d = false;
@@ -151,25 +122,8 @@ function _iterableToArrayLimit(arr, i) {
   return _arr;
 }
 
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
 function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
 }
 
 //this is a not-well-thought-out way to reduce our dependence on `object===object` stuff
@@ -425,18 +379,8 @@ var parseTerm = function parseTerm(str) {
 
 var parse = parseTerm;
 
-function createCommonjsModule(fn, basedir, module) {
-	return module = {
-	  path: basedir,
-	  exports: {},
-	  require: function (path, base) {
-      return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
-    }
-	}, fn(module, module.exports), module.exports;
-}
-
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
 var _01Case = createCommonjsModule(function (module, exports) {
@@ -482,6 +426,12 @@ var _01Case = createCommonjsModule(function (module, exports) {
 
   exports.titleCase = exports.isTitleCase;
 });
+var _01Case_1 = _01Case.toUpperCase;
+var _01Case_2 = _01Case.toLowerCase;
+var _01Case_3 = _01Case.toTitleCase;
+var _01Case_4 = _01Case.isUpperCase;
+var _01Case_5 = _01Case.isTitleCase;
+var _01Case_6 = _01Case.titleCase;
 
 var _02Punctuation = createCommonjsModule(function (module, exports) {
   // these methods are called with '@hasComma' in the match syntax
@@ -581,6 +531,21 @@ var _02Punctuation = createCommonjsModule(function (module, exports) {
     return this;
   };
 });
+var _02Punctuation_1 = _02Punctuation.hasPost;
+var _02Punctuation_2 = _02Punctuation.hasPre;
+var _02Punctuation_3 = _02Punctuation.hasQuote;
+var _02Punctuation_4 = _02Punctuation.hasQuotation;
+var _02Punctuation_5 = _02Punctuation.hasComma;
+var _02Punctuation_6 = _02Punctuation.hasPeriod;
+var _02Punctuation_7 = _02Punctuation.hasExclamation;
+var _02Punctuation_8 = _02Punctuation.hasQuestionMark;
+var _02Punctuation_9 = _02Punctuation.hasEllipses;
+var _02Punctuation_10 = _02Punctuation.hasSemicolon;
+var _02Punctuation_11 = _02Punctuation.hasSlash;
+var _02Punctuation_12 = _02Punctuation.hasHyphen;
+var _02Punctuation_13 = _02Punctuation.hasDash;
+var _02Punctuation_14 = _02Punctuation.hasContraction;
+var _02Punctuation_15 = _02Punctuation.addPunctuation;
 
 //declare it up here
 var wrapMatch = function wrapMatch() {};
@@ -1222,7 +1187,9 @@ var tag = {
   canBe: canBe_1$1
 };
 
-var Term = /*#__PURE__*/function () {
+var Term =
+/*#__PURE__*/
+function () {
   function Term() {
     var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
@@ -1824,7 +1791,7 @@ var prepend_1 = function prepend_1(newPhrase, doc) {
   return this;
 };
 
-var _delete$1 = function _delete$1(doc) {
+var delete_1 = function delete_1(doc) {
   _delete(this, doc);
   return this;
 }; // stich-in newPhrase, stretch 'doc' + parents
@@ -1884,7 +1851,7 @@ var splitOn = function splitOn(p) {
 var _04Insert = {
   append: append_1,
   prepend: prepend_1,
-  "delete": _delete$1,
+  "delete": delete_1,
   replace: replace,
   splitOn: splitOn
 };
@@ -2964,7 +2931,9 @@ Object.keys(aliases).forEach(function (k) {
 var Phrase_1 = Phrase;
 
 /** a key-value store of all terms in our Document */
-var Pool = /*#__PURE__*/function () {
+var Pool =
+/*#__PURE__*/
+function () {
   function Pool() {
     var words = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -3429,7 +3398,7 @@ var fromJSON = function fromJSON(json, world) {
 
 var fromJSON_1 = fromJSON;
 
-var _version = '13.3.2';
+var _version = '13.3.2-patched';
 
 var _data = {
   "Comparative": "true¦better",
@@ -5959,7 +5928,9 @@ var transforms$2 = {
 var _isVerbose = false;
 /** all configurable linguistic data */
 
-var World = /*#__PURE__*/function () {
+var World =
+/*#__PURE__*/
+function () {
   function World() {
     _classCallCheck(this, World);
 
@@ -6207,6 +6178,12 @@ var _01Utils$1 = createCommonjsModule(function (module, exports) {
   //   this.world.verbose = bool
   // }
 });
+var _01Utils_1 = _01Utils$1.all;
+var _01Utils_2 = _01Utils$1.parent;
+var _01Utils_3 = _01Utils$1.parents;
+var _01Utils_4 = _01Utils$1.clone;
+var _01Utils_5 = _01Utils$1.wordCount;
+var _01Utils_6 = _01Utils$1.wordcount;
 
 var _02Accessors = createCommonjsModule(function (module, exports) {
   /** use only the first result(s) */
@@ -6376,6 +6353,20 @@ var _02Accessors = createCommonjsModule(function (module, exports) {
 
   exports.sentence = exports.sentences;
 });
+var _02Accessors_1 = _02Accessors.first;
+var _02Accessors_2 = _02Accessors.last;
+var _02Accessors_3 = _02Accessors.slice;
+var _02Accessors_4 = _02Accessors.eq;
+var _02Accessors_5 = _02Accessors.get;
+var _02Accessors_6 = _02Accessors.firstTerms;
+var _02Accessors_7 = _02Accessors.firstTerm;
+var _02Accessors_8 = _02Accessors.lastTerms;
+var _02Accessors_9 = _02Accessors.lastTerm;
+var _02Accessors_10 = _02Accessors.termList;
+var _02Accessors_11 = _02Accessors.groups;
+var _02Accessors_12 = _02Accessors.group;
+var _02Accessors_13 = _02Accessors.sentences;
+var _02Accessors_14 = _02Accessors.sentence;
 
 // cache the easier conditions up-front
 var cacheRequired = function cacheRequired(reg) {
@@ -6638,6 +6629,19 @@ var _03Match = createCommonjsModule(function (module, exports) {
     });
   };
 });
+var _03Match_1 = _03Match.match;
+var _03Match_2 = _03Match.not;
+var _03Match_3 = _03Match.matchOne;
+var _03Match_4 = _03Match.ifNo;
+var _03Match_5 = _03Match.has;
+var _03Match_6 = _03Match.lookAhead;
+var _03Match_7 = _03Match.lookAfter;
+var _03Match_8 = _03Match.lookBehind;
+var _03Match_9 = _03Match.lookBefore;
+var _03Match_10 = _03Match.before;
+var _03Match_11 = _03Match.after;
+var _03Match_12 = _03Match.hasAfter;
+var _03Match_13 = _03Match.hasBefore;
 
 /** apply a tag, or tags to all terms */
 var tagTerms = function tagTerms(tag, doc, safe, reason) {
@@ -7057,6 +7061,8 @@ var _06Lookup = createCommonjsModule(function (module, exports) {
 
   exports.lookUp = exports.lookup;
 });
+var _06Lookup_1 = _06Lookup.lookup;
+var _06Lookup_2 = _06Lookup.lookUp;
 
 /** freeze the current state of the document, for speed-purposes*/
 var cache$1 = function cache(options) {
@@ -7314,6 +7320,13 @@ var _02Insert = createCommonjsModule(function (module, exports) {
 
   exports.remove = exports["delete"];
 });
+var _02Insert_1 = _02Insert.append;
+var _02Insert_2 = _02Insert.insertAfter;
+var _02Insert_3 = _02Insert.insertAt;
+var _02Insert_4 = _02Insert.prepend;
+var _02Insert_5 = _02Insert.insertBefore;
+var _02Insert_6 = _02Insert.concat;
+var _02Insert_7 = _02Insert.remove;
 
 var shouldTrim = {
   clean: true,
@@ -7402,14 +7415,17 @@ var calcOffset = function calcOffset(doc, result, options) {
       //   console.log(t.post)
       //   return n
       // }, 0)
-      // offset information for the entire doc starts at the first term, and
-      // is as long as the whole text (note that there may be an issue where
-      // leading punctuation is counted in the doc text length, but is
-      // *excluded* from the term[0] start position)
+      // The offset information for the entire doc starts at (or just before)
+      // the first term, and is as long as the whole text.  The code originally
+      // copied the entire offset value from terms[0], but since we're now
+      // overriding 2 of the three fields, it's cleaner to just create an all-
+      // new object and not pretend it's "just" the same as terms[0].
 
-      o.offset = Object.assign({}, o.terms[0].offset, {
+      o.offset = {
+        index: o.terms[0].offset.index,
+        start: o.terms[0].offset.start - o.text.indexOf(o.terms[0].text),
         length: o.text.length
-      });
+      };
     });
   }
 };
@@ -7513,6 +7529,8 @@ var _02Json = createCommonjsModule(function (module, exports) {
 
   exports.data = exports.json;
 });
+var _02Json_1 = _02Json.json;
+var _02Json_2 = _02Json.data;
 
 var _debug = createCommonjsModule(function (module) {
   // https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
@@ -8329,6 +8347,11 @@ var _03Split = createCommonjsModule(function (module, exports) {
     });
   };
 });
+var _03Split_1 = _03Split.splitOn;
+var _03Split_2 = _03Split.splitAfter;
+var _03Split_3 = _03Split.split;
+var _03Split_4 = _03Split.splitBefore;
+var _03Split_5 = _03Split.segment;
 
 var eachTerm = function eachTerm(doc, fn) {
   var world = doc.world;
@@ -8504,6 +8527,15 @@ var _05Whitespace = createCommonjsModule(function (module, exports) {
     return this;
   };
 });
+var _05Whitespace_1 = _05Whitespace.pre;
+var _05Whitespace_2 = _05Whitespace.post;
+var _05Whitespace_3 = _05Whitespace.trim;
+var _05Whitespace_4 = _05Whitespace.hyphenate;
+var _05Whitespace_5 = _05Whitespace.dehyphenate;
+var _05Whitespace_6 = _05Whitespace.deHyphenate;
+var _05Whitespace_7 = _05Whitespace.toQuotations;
+var _05Whitespace_8 = _05Whitespace.toQuotation;
+var _05Whitespace_9 = _05Whitespace.toParentheses;
 
 /** make all phrases into one phrase */
 var join = function join(str) {
@@ -11893,15 +11925,15 @@ var _02Tagger = tagger;
 
 var addMethod = function addMethod(Doc) {
   /**  */
-  var Abbreviations = /*#__PURE__*/function (_Doc) {
+  var Abbreviations =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Abbreviations, _Doc);
-
-    var _super = _createSuper(Abbreviations);
 
     function Abbreviations() {
       _classCallCheck(this, Abbreviations);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Abbreviations).apply(this, arguments));
     }
 
     _createClass(Abbreviations, [{
@@ -11952,15 +11984,15 @@ var hasPeriod = /\./;
 
 var addMethod$1 = function addMethod(Doc) {
   /**  */
-  var Acronyms = /*#__PURE__*/function (_Doc) {
+  var Acronyms =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Acronyms, _Doc);
-
-    var _super = _createSuper(Acronyms);
 
     function Acronyms() {
       _classCallCheck(this, Acronyms);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Acronyms).apply(this, arguments));
     }
 
     _createClass(Acronyms, [{
@@ -12072,17 +12104,17 @@ var Clauses = addMethod$2;
 
 var addMethod$3 = function addMethod(Doc) {
   /**  */
-  var Contractions = /*#__PURE__*/function (_Doc) {
+  var Contractions =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Contractions, _Doc);
-
-    var _super = _createSuper(Contractions);
 
     function Contractions(list, from, world) {
       var _this;
 
       _classCallCheck(this, Contractions);
 
-      _this = _super.call(this, list, from, world);
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(Contractions).call(this, list, from, world));
       _this.contracted = null;
       return _this;
     }
@@ -12161,15 +12193,15 @@ var addMethod$4 = function addMethod(Doc) {
   /** cool, fun, and nice */
 
 
-  var Lists = /*#__PURE__*/function (_Doc) {
+  var Lists =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Lists, _Doc);
-
-    var _super = _createSuper(Lists);
 
     function Lists() {
       _classCallCheck(this, Lists);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Lists).apply(this, arguments));
     }
 
     _createClass(Lists, [{
@@ -12581,15 +12613,15 @@ var methods_1 = methods$6;
 
 var addMethod$5 = function addMethod(Doc) {
   /**  */
-  var Nouns = /*#__PURE__*/function (_Doc) {
+  var Nouns =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Nouns, _Doc);
-
-    var _super = _createSuper(Nouns);
 
     function Nouns() {
       _classCallCheck(this, Nouns);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Nouns).apply(this, arguments));
     }
 
     return Nouns;
@@ -12632,15 +12664,15 @@ var close = /\)/;
 
 var addMethod$6 = function addMethod(Doc) {
   /** anything between (these things) */
-  var Parentheses = /*#__PURE__*/function (_Doc) {
+  var Parentheses =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Parentheses, _Doc);
-
-    var _super = _createSuper(Parentheses);
 
     function Parentheses() {
       _classCallCheck(this, Parentheses);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Parentheses).apply(this, arguments));
     }
 
     _createClass(Parentheses, [{
@@ -12703,17 +12735,17 @@ var Parentheses = addMethod$6;
 
 var addMethod$7 = function addMethod(Doc) {
   /**  */
-  var Possessives = /*#__PURE__*/function (_Doc) {
+  var Possessives =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Possessives, _Doc);
-
-    var _super = _createSuper(Possessives);
 
     function Possessives(list, from, world) {
       var _this;
 
       _classCallCheck(this, Possessives);
 
-      _this = _super.call(this, list, from, world);
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(Possessives).call(this, list, from, world));
       _this.contracted = null;
       return _this;
     }
@@ -12806,15 +12838,15 @@ var hasOpen = RegExp('(' + Object.keys(pairs).join('|') + ')');
 
 var addMethod$8 = function addMethod(Doc) {
   /** "these things" */
-  var Quotations = /*#__PURE__*/function (_Doc) {
+  var Quotations =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Quotations, _Doc);
-
-    var _super = _createSuper(Quotations);
 
     function Quotations() {
       _classCallCheck(this, Quotations);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Quotations).apply(this, arguments));
     }
 
     _createClass(Quotations, [{
@@ -13422,15 +13454,15 @@ var methods$7 = {
 
 var addMethod$9 = function addMethod(Doc) {
   /**  */
-  var Verbs = /*#__PURE__*/function (_Doc) {
+  var Verbs =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(Verbs, _Doc);
-
-    var _super = _createSuper(Verbs);
 
     function Verbs() {
       _classCallCheck(this, Verbs);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Verbs).apply(this, arguments));
     }
 
     return Verbs;
@@ -13478,15 +13510,15 @@ var Verbs = addMethod$9;
 
 var addMethod$a = function addMethod(Doc) {
   /**  */
-  var People = /*#__PURE__*/function (_Doc) {
+  var People =
+  /*#__PURE__*/
+  function (_Doc) {
     _inherits(People, _Doc);
-
-    var _super = _createSuper(People);
 
     function People() {
       _classCallCheck(this, People);
 
-      return _super.apply(this, arguments);
+      return _possibleConstructorReturn(this, _getPrototypeOf(People).apply(this, arguments));
     }
 
     return People;
@@ -13530,7 +13562,9 @@ var methods$8 = {
 };
 /** a parsed text object */
 
-var Doc = /*#__PURE__*/function () {
+var Doc =
+/*#__PURE__*/
+function () {
   function Doc(list, from, world) {
     var _this = this;
 
